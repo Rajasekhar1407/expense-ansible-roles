@@ -9,27 +9,16 @@
     state: started
     enabled: yes
 
-- name: delete default website
-  file:
-    path: /usr/share/nginx/html
-    state: absent
-
-- name: create html directory
-  file:
-    path: /usr/share/nginx/html
-    state: directory
-
-- name: download and extract frontend code
-  unarchive:
-    src: https://expense-builds.s3.us-east-1.amazonaws.com/expense-frontend-v2.zip
-    dest: /usr/share/nginx/html
-    remote_src: yes
+- name: run app-pre-requisites
+  import_role: # this will import roles
+    name: common # from common folder
+    tasks_from: app-pre-req # in common folder task from app-pre-req folder
 
 - name: copy expense content
   template:
     src: expense.conf.j2
     dest: /etc/nginx/default.d/expense.conf
-  notify:
+  notify: # if you use handlers if any modification in configuration file then nginx restart will happen otherwise it will nor restart
   - restart nginx
 
 # - name: restart nginx

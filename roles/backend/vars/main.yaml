@@ -1,3 +1,5 @@
 login_password: ExpenseApp@1
 login_host: db.rajasekhar.online
 DB_HOST: db.rajasekhar.online
+app_location: /app
+component: backend

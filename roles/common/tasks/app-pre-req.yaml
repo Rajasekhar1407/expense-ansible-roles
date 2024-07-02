@@ -1,0 +1,15 @@
+- name: delete default directory
+  file:
+    path: "{{ app_location }}"
+    state: absent
+
+- name: create app directory
+  file:
+    path: "{{ app_location }}"
+    state: directory
+
+- name: download and extract code
+  unarchive:
+    src: https://expense-builds.s3.us-east-1.amazonaws.com/expense-{{ component }}-v2.zip
+    dest: "{{ app_location }}"
+    remote_src: yes

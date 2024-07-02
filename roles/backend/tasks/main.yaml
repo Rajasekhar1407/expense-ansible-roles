@@ -17,22 +17,10 @@
   ansible.builtin.user: 
     name: expense
 
-- name: create app directory
-  ansible.builtin.file:
-    path: /app
-    state: directory # if you give file then it will create file
-
-- name: download backend code
-  ansible.builtin.get_url:
-    url: https://expense-builds.s3.us-east-1.amazonaws.com/expense-backend-v2.zip
-    dest: /tmp/backend.zip
-
-- name: unzip the backend code
-  ansible.builtin.unarchive:
-    src: /tmp/backend.zip
-    dest: /app
-    remote_src: yes 
-    # by default it will checks in ansible server but if you give "remote_src: yes" then it will checks in remote server
+- name: run app-pre-requisites
+  ansible.builtin.import_role: # this will import roles
+    name: common # from common folder
+    tasks_from: app-pre-req # in common folder task from app-pre-req folder
 
 - name: install dependencies
   ansible.builtin.command: npm install
