@@ -18,11 +18,15 @@
     name: expense
 
 - name: run app-pre-requisites
+  tags:
+  - deployment
   ansible.builtin.import_role: # this will import roles
     name: common # from common folder
     tasks_from: app-pre-req # in common folder task from app-pre-req folder
 
 - name: install dependencies
+  tags:
+  - deployment
   ansible.builtin.command: npm install
   args:
     chdir: /app 
@@ -50,6 +54,8 @@
   ansible.builtin.template: # this module will copy a file from source to destination
     src: backend.service.j2
     dest: /etc/systemd/system/backend.service
+  notify:
+  - demon reload
 # instead of copy we have ansible template. with this template we can use variables, templates will replace variable value and copy to destination
 
 - name: install python mysql dependencies
@@ -68,15 +74,13 @@
     state: import
     name: all
 
-- name: demon reload
-  ansible.builtin.systemd_service:
-    daemon_reload: true
-
 # ansible.builtin.systemd: The Ansible module used for interacting with systemd services.
 # daemon_reload: The key to reload the systemd manager configuration.
 # This task will reload the systemd daemon, which is necessary after making changes to service unit files.
 
 - name: start and enable backend
+  tags:
+  - deplyoment
   ansible.builtin.service:
     name: backend
     state: started
